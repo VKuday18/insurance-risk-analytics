@@ -48,8 +48,26 @@ dashboards/ → Power BI
 - [x] EDA notebook — see `notebooks/01_eda.ipynb`, figures in `reports/`
 - [x] Predictive model (charges regression) — `src/train_model.py`
 - [x] Risk tier classification — `src/train_model.py`
-- [ ] Power BI dashboard
+- [x] Interactive dashboard — built in Tableau Public (see below)
 - [ ] Findings report
+
+## Interactive dashboard
+
+**[View live dashboard on Tableau Public →](https://public.tableau.com/app/profile/uday.babu.dharmapuri4235/viz/HealthInsuranceRiskAnalyticsDashboard/HealthInsuranceRiskAnalyticsKeyFindings)**
+
+Three linked views built directly from `data/processed/policyholders_clean.csv`,
+recreating and making interactive the core EDA findings:
+
+1. **Charges by Smoker** — the ~3.8x cost multiplier for smokers
+2. **BMI × Smoking Interaction** — obesity compounding smoking's cost impact
+   across all four BMI categories
+3. **Risk Tier Validation** — the composite `risk_tier` field cleanly
+   separating standard/elevated/high charge levels (~5.2x spread)
+
+Built in Tableau Public rather than Power BI Desktop, which has no native
+macOS version. Tableau Public is a free, browser/desktop-hybrid BI tool
+covering the same core skill set (data modeling, aggregation, dashboard
+design, publishing) — noted here for transparency about tooling choice.
 
 ## Modeling results
 
