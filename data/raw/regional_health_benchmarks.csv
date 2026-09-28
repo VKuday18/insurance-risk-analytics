@@ -1,0 +1,5 @@
+region,census_division_note,adult_obesity_rate_2023,source
+northeast,CDC Northeast region,28.6,"CDC BRFSS 2023 Adult Obesity Prevalence (cdc.gov/obesity, Sept 2024 release)"
+southeast,Mapped to CDC South region,34.7,"CDC BRFSS 2023 Adult Obesity Prevalence (cdc.gov/obesity, Sept 2024 release)"
+southwest,Mapped to CDC South region,34.7,"CDC BRFSS 2023 Adult Obesity Prevalence (cdc.gov/obesity, Sept 2024 release)"
+northwest,Mapped to CDC West region,29.1,"CDC BRFSS 2023 Adult Obesity Prevalence (cdc.gov/obesity, Sept 2024 release)"
