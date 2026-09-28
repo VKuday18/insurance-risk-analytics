@@ -46,10 +46,41 @@ dashboards/ → Power BI
 - [x] Repo scaffold + raw data sourced
 - [x] ETL + SQL cleaning/transform layer
 - [x] EDA notebook — see `notebooks/01_eda.ipynb`, figures in `reports/`
-- [ ] Predictive model (charges regression)
-- [ ] Risk tier classification
+- [x] Predictive model (charges regression) — `src/train_model.py`
+- [x] Risk tier classification — `src/train_model.py`
 - [ ] Power BI dashboard
 - [ ] Findings report
+
+## Modeling results
+
+**Charges regression** (log-target, 80/20 split, random_state=42):
+
+| Model | MAE ($) | R² (log target) |
+|---|---|---|
+| Linear regression (baseline) | 3,756 | 0.830 |
+| Gradient boosting (final) | **2,246** | **0.878** |
+
+Gradient boosting cuts mean absolute error by ~40% over the linear baseline —
+consistent with the EDA finding that age/smoker/BMI interact rather than add.
+
+**Risk tier classification — data leakage note:**
+
+`risk_tier` is deterministically computed from `smoker` + `bmi` in the SQL
+transform step. A classifier trained with those two fields included scores
+99.6% accuracy — that's leakage, not a real result, and is documented as
+such in `src/train_model.py` rather than reported as a finding.
+
+The actually meaningful test: **can the other fields alone (age, sex,
+children, region) predict risk tier, without the smoker/BMI shortcut?**
+Answer: no — accuracy drops to 49.6%, and the model misses every single
+`high`-risk case. This is a legitimate, useful finding: smoking and BMI
+aren't just correlated with risk in this dataset, they're carrying nearly
+all of the predictive signal. Demographics alone don't substitute for them.
+
+Saved models: `models/charges_regressor.joblib`,
+`models/risk_tier_classifier.joblib` (trained on non-leaky features).
+Full metrics: `reports/model_metrics.json`.
+
 
 ## Key EDA findings
 

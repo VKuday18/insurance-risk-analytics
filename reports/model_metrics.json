@@ -1,0 +1,80 @@
+{
+  "regression": {
+    "baseline_linear": {
+      "mae_dollars": 3755.92,
+      "r2_on_log_target": 0.8295
+    },
+    "gradient_boosting": {
+      "mae_dollars": 2246.16,
+      "r2_on_log_target": 0.8778
+    }
+  },
+  "classification": {
+    "full_features_leaky_reference_only": {
+      "elevated": {
+        "precision": 0.9928057553956835,
+        "recall": 1.0,
+        "f1-score": 0.9963898916967509,
+        "support": 138.0
+      },
+      "high": {
+        "precision": 1.0,
+        "recall": 0.9655172413793104,
+        "f1-score": 0.9824561403508771,
+        "support": 29.0
+      },
+      "standard": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 101.0
+      },
+      "accuracy": 0.996268656716418,
+      "macro avg": {
+        "precision": 0.9976019184652278,
+        "recall": 0.9885057471264368,
+        "f1-score": 0.9929486773492093,
+        "support": 268.0
+      },
+      "weighted avg": {
+        "precision": 0.9962955009127027,
+        "recall": 0.996268656716418,
+        "f1-score": 0.996242660911668,
+        "support": 268.0
+      }
+    },
+    "non_leaky_features": {
+      "elevated": {
+        "precision": 0.53125,
+        "recall": 0.7391304347826086,
+        "f1-score": 0.6181818181818182,
+        "support": 138.0
+      },
+      "high": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 29.0
+      },
+      "standard": {
+        "precision": 0.40789473684210525,
+        "recall": 0.3069306930693069,
+        "f1-score": 0.3502824858757062,
+        "support": 101.0
+      },
+      "accuracy": 0.4962686567164179,
+      "macro avg": {
+        "precision": 0.3130482456140351,
+        "recall": 0.3486870426173052,
+        "f1-score": 0.32282143468584146,
+        "support": 268.0
+      },
+      "weighted avg": {
+        "precision": 0.42727562843676353,
+        "recall": 0.4962686567164179,
+        "f1-score": 0.4503269476960345,
+        "support": 268.0
+      }
+    }
+  }
+}
