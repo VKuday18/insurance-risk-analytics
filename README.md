@@ -64,10 +64,9 @@ recreating and making interactive the core EDA findings:
 3. **Risk Tier Validation** — the composite `risk_tier` field cleanly
    separating standard/elevated/high charge levels (~5.2x spread)
 
-Built in Tableau Public rather than Power BI Desktop, which has no native
-macOS version. Tableau Public is a free, browser/desktop-hybrid BI tool
-covering the same core skill set (data modeling, aggregation, dashboard
-design, publishing) — noted here for transparency about tooling choice.
+Built in Tableau Public, a free BI and data visualization tool, covering the
+core dashboarding skill set: data modeling, aggregation, and publishing an
+interactive, shareable report.
 
 ## Modeling results
 
