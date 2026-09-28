@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health Insurance Cost Estimator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFFFF;
+    --panel: #F7F9FA;
+    --text: #1B2A38;
+    --muted: #5B7C99;
+    --border: #DDE5EA;
+    --accent: #2E7D6B;
+    --accent-light: #E4F1EE;
+    --warn: #B45309;
+    --warn-light: #FEF3E2;
+    --high: #B3261E;
+    --high-light: #FBEAE9;
+    --serif: 'Source Serif 4', Georgia, serif;
+    --sans: 'Inter', -apple-system, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--sans);
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+    font-size: 17px;
+  }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 24px; }
+
+  header { padding: 48px 0 32px; border-bottom: 1px solid var(--border); }
+  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .brand svg { flex-shrink: 0; }
+  .brand span { font-family: var(--sans); font-weight: 600; font-size: 15px; color: var(--muted); letter-spacing: 0.01em; }
+  h1 {
+    font-family: var(--serif); font-weight: 600; font-size: clamp(30px, 5vw, 40px);
+    line-height: 1.15; margin-bottom: 14px; color: var(--text);
+  }
+  header p { color: var(--muted); font-size: 17px; max-width: 52ch; }
+
+  main { padding: 40px 0 80px; }
+
+  .field-group { margin-bottom: 28px; }
+  label {
+    display: block; font-weight: 600; font-size: 15px; margin-bottom: 8px; color: var(--text);
+  }
+  .hint { font-size: 14px; color: var(--muted); margin-top: 6px; }
+
+  input[type="number"], select {
+    width: 100%; padding: 13px 16px; font-size: 17px; font-family: var(--sans);
+    border: 1.5px solid var(--border); border-radius: 8px; color: var(--text);
+    background: #fff; transition: border-color 0.15s;
+  }
+  input[type="number"]:focus, select:focus {
+    outline: none; border-color: var(--accent);
+  }
+  select { cursor: pointer; }
+
+  .radio-row { display: flex; gap: 12px; }
+  .radio-option {
+    flex: 1; position: relative;
+  }
+  .radio-option input { position: absolute; opacity: 0; }
+  .radio-option label {
+    display: block; text-align: center; padding: 13px 12px; font-weight: 500; font-size: 15px;
+    border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--muted);
+    transition: all 0.15s; margin-bottom: 0;
+  }
+  .radio-option input:checked + label {
+    border-color: var(--accent); background: var(--accent-light); color: var(--accent); font-weight: 600;
+  }
+  .radio-option input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 520px) { .two-col { grid-template-columns: 1fr; } }
+
+  .bmi-toggle {
+    display: flex; gap: 8px; margin-bottom: 16px; padding: 4px;
+    background: var(--panel); border-radius: 10px; border: 1px solid var(--border);
+  }
+  .bmi-toggle button {
+    flex: 1; padding: 10px; border: none; background: transparent; border-radius: 7px;
+    font-family: var(--sans); font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer;
+    transition: all 0.15s;
+  }
+  .bmi-toggle button.active { background: #fff; color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+  .bmi-mode { display: none; }
+  .bmi-mode.active { display: block; }
+
+  .unit-hint { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  button.submit {
+    width: 100%; padding: 17px; font-family: var(--sans); font-size: 17px; font-weight: 600;
+    background: var(--accent); color: #fff; border: none; border-radius: 8px; cursor: pointer;
+    margin-top: 12px; transition: background 0.15s;
+  }
+  button.submit:hover { background: #256556; }
+  button.submit:disabled { background: var(--border); cursor: not-allowed; }
+
+  .error-box {
+    display: none; background: var(--high-light); border: 1px solid var(--high);
+    color: var(--high); padding: 14px 16px; border-radius: 8px; font-size: 15px; margin-top: 16px;
+  }
+  .error-box.show { display: block; }
+
+  /* RESULTS */
+  #results { display: none; margin-top: 40px; padding-top: 40px; border-top: 1px solid var(--border); }
+  #results.show { display: block; }
+
+  .result-headline { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+  .result-headline svg { flex-shrink: 0; }
+  .result-headline h2 { font-family: var(--serif); font-weight: 600; font-size: 24px; }
+
+  .charge-figure {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 28px; text-align: center; margin-bottom: 20px;
+  }
+  .charge-figure .label { font-size: 14px; color: var(--muted); font-weight: 500; margin-bottom: 8px; }
+  .charge-figure .amount { font-family: var(--serif); font-size: 44px; font-weight: 700; color: var(--text); }
+  .charge-figure .sub { font-size: 14px; color: var(--muted); margin-top: 6px; }
+
+  .tier-badge {
+    display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 20px;
+    font-weight: 600; font-size: 14px; margin-bottom: 20px;
+  }
+  .tier-standard { background: var(--accent-light); color: var(--accent); }
+  .tier-elevated { background: var(--warn-light); color: var(--warn); }
+  .tier-high { background: var(--high-light); color: var(--high); }
+
+  .tier-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+
+  .detail-row {
+    display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed var(--border);
+    font-size: 15px;
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-row .k { color: var(--muted); }
+  .detail-row .v { font-weight: 600; }
+
+  .disclaimer {
+    margin-top: 28px; font-size: 13px; color: var(--muted); line-height: 1.6;
+    background: var(--panel); padding: 16px 18px; border-radius: 8px; border: 1px solid var(--border);
+  }
+
+  footer {
+    border-top: 1px solid var(--border); padding: 28px 0; text-align: center;
+    font-size: 13px; color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <path d="M14 24C14 24 4 17.5 4 10.5C4 6.9 6.9 4 10.4 4C12.3 4 14 4.9 14 4.9C14 4.9 15.7 4 17.6 4C21.1 4 24 6.9 24 10.5C24 17.5 14 24 14 24Z" stroke="#2E7D6B" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M8 13H11L12.5 9L15 17L16.5 13H20" stroke="#2E7D6B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>HEALTH COST ESTIMATOR</span>
+    </div>
+    <h1>Estimate your annual health insurance cost</h1>
+    <p>Answer a few questions about yourself. This tool uses a model trained on real policyholder data to give you a realistic estimate — not a quote, but a useful starting point.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <form id="predict-form">
+
+    <div class="field-group">
+      <label for="age">Your age</label>
+      <input type="number" id="age" min="1" max="120" placeholder="e.g. 35" required>
+    </div>
+
+    <div class="field-group">
+      <label>Sex</label>
+      <div class="radio-row">
+        <div class="radio-option">
+          <input type="radio" name="sex" id="sex-female" value="female" checked>
+          <label for="sex-female">Female</label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" name="sex" id="sex-male" value="male">
+          <label for="sex-male">Male</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Do you know your BMI?</label>
+      <div class="bmi-toggle">
+        <button type="button" id="bmi-known-btn" class="active">Yes, I know it</button>
+        <button type="button" id="bmi-unknown-btn">No, calculate it for me</button>
+      </div>
+
+      <div id="bmi-known" class="bmi-mode active">
+        <input type="number" id="bmi" step="0.1" min="10" max="70" placeholder="e.g. 24.5">
+        <p class="unit-hint">Your BMI is usually shown on a recent health checkup or a doctor's visit summary.</p>
+      </div>
+
+      <div id="bmi-unknown" class="bmi-mode">
+        <div class="two-col">
+          <div>
+            <input type="number" id="height_cm" step="0.1" min="50" max="250" placeholder="Height in cm">
+            <p class="unit-hint">e.g. 170 cm ≈ 5'7"</p>
+          </div>
+          <div>
+            <input type="number" id="weight_kg" step="0.1" min="20" max="300" placeholder="Weight in kg">
+            <p class="unit-hint">e.g. 70 kg ≈ 154 lbs</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Do you smoke?</label>
+      <div class="radio-row">
+        <div class="radio-option">
+          <input type="radio" name="smoker" id="smoker-no" value="no" checked>
+          <label for="smoker-no">No</label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" name="smoker" id="smoker-yes" value="yes">
+          <label for="smoker-yes">Yes</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label for="children">Number of children / dependents</label>
+      <input type="number" id="children" min="0" max="20" value="0" required>
+    </div>
+
+    <div class="field-group">
+      <label for="region">Your region (US)</label>
+      <select id="region" required>
+        <option value="northeast">Northeast</option>
+        <option value="northwest">Northwest</option>
+        <option value="southeast">Southeast</option>
+        <option value="southwest">Southwest</option>
+      </select>
+    </div>
+
+    <button type="submit" class="submit" id="submit-btn">Get my estimate</button>
+    <div class="error-box" id="error-box"></div>
+  </form>
+
+  <div id="results">
+    <div class="result-headline">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="15" stroke="#2E7D6B" stroke-width="2"/>
+        <path d="M10 16.5L14 20.5L22 11.5" stroke="#2E7D6B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h2>Here's your estimate</h2>
+    </div>
+
+    <div class="charge-figure">
+      <div class="label">Estimated annual charges</div>
+      <div class="amount" id="charge-amount">$0</div>
+      <div class="sub">Based on people with a similar profile in the training data</div>
+    </div>
+
+    <div id="tier-badge-wrap"></div>
+
+    <div class="detail-row"><span class="k">BMI used in calculation</span><span class="v" id="bmi-used">—</span></div>
+    <div class="detail-row"><span class="k">BMI category</span><span class="v" id="bmi-cat">—</span></div>
+
+    <div class="disclaimer">
+      This is a statistical estimate from a machine learning model trained on a public dataset of
+      1,337 policyholders, not a medical or financial recommendation. Actual insurance premiums
+      depend on your specific insurer, plan, and underwriting rules. Speak with a licensed
+      insurance professional for an actual quote.
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    Built as part of the Health Insurance Premium &amp; Risk Analytics Platform project.
+  </div>
+</footer>
+
+<script>
+const bmiKnownBtn = document.getElementById('bmi-known-btn');
+const bmiUnknownBtn = document.getElementById('bmi-unknown-btn');
+const bmiKnownPanel = document.getElementById('bmi-known');
+const bmiUnknownPanel = document.getElementById('bmi-unknown');
+
+bmiKnownBtn.addEventListener('click', () => {
+  bmiKnownBtn.classList.add('active');
+  bmiUnknownBtn.classList.remove('active');
+  bmiKnownPanel.classList.add('active');
+  bmiUnknownPanel.classList.remove('active');
+});
+bmiUnknownBtn.addEventListener('click', () => {
+  bmiUnknownBtn.classList.add('active');
+  bmiKnownBtn.classList.remove('active');
+  bmiUnknownPanel.classList.add('active');
+  bmiKnownPanel.classList.remove('active');
+});
+
+const form = document.getElementById('predict-form');
+const errorBox = document.getElementById('error-box');
+const results = document.getElementById('results');
+const submitBtn = document.getElementById('submit-btn');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errorBox.classList.remove('show');
+  results.classList.remove('show');
+
+  const usingKnownBmi = bmiKnownBtn.classList.contains('active');
+
+  const payload = {
+    age: document.getElementById('age').value,
+    sex: document.querySelector('input[name="sex"]:checked').value,
+    smoker: document.querySelector('input[name="smoker"]:checked').value,
+    children: document.getElementById('children').value,
+    region: document.getElementById('region').value,
+  };
+
+  if (usingKnownBmi) {
+    payload.bmi = document.getElementById('bmi').value;
+  } else {
+    payload.height_cm = document.getElementById('height_cm').value;
+    payload.weight_kg = document.getElementById('weight_kg').value;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Calculating…';
+
+  try {
+    const res = await fetch('/api/predict', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      errorBox.textContent = data.error || 'Something went wrong. Please check your inputs.';
+      errorBox.classList.add('show');
+      return;
+    }
+
+    document.getElementById('charge-amount').textContent =
+      '$' + data.predicted_annual_charges.toLocaleString(undefined, {maximumFractionDigits: 0});
+    document.getElementById('bmi-used').textContent = data.bmi_used;
+    document.getElementById('bmi-cat').textContent =
+      data.bmi_category.charAt(0).toUpperCase() + data.bmi_category.slice(1);
+
+    const tierLabels = {
+      standard: 'Standard risk',
+      elevated: 'Elevated risk',
+      high: 'High risk',
+    };
+    document.getElementById('tier-badge-wrap').innerHTML =
+      `<div class="tier-badge tier-${data.risk_tier}"><span class="tier-dot"></span>${tierLabels[data.risk_tier]}</div>`;
+
+    results.classList.add('show');
+    results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (err) {
+    errorBox.textContent = 'Could not reach the server. Please try again.';
+    errorBox.classList.add('show');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Get my estimate';
+  }
+});
+</script>
+
+</body>
+</html>

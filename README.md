@@ -49,7 +49,22 @@ dashboards/ → Tableau Public
 - [x] Predictive model (charges regression) — `src/train_model.py`
 - [x] Risk tier classification — `src/train_model.py`
 - [x] Interactive dashboard — built in Tableau Public (see below)
+- [x] Live prediction web app — `webapp/` (see below)
 - [ ] Findings report
+
+## Prediction web app
+
+The trained model is served through a real form-based tool, not just a
+saved file: **[`webapp/`](./webapp)** — Flask backend + a plain-language
+frontend designed for non-technical users, including a toggle for people
+who don't know their BMI (calculates it from height/weight instead).
+
+Run locally:
+```bash
+cd webapp && pip install -r requirements.txt && python app.py
+```
+See `webapp/README.md` for deployment instructions (free hosting on Render).
+
 
 ## Interactive dashboard
 
