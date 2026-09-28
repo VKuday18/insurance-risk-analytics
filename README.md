@@ -44,9 +44,24 @@ dashboards/ → Power BI
 ## Status
 
 - [x] Repo scaffold + raw data sourced
-- [ ] ETL + SQL cleaning/transform layer
+- [x] ETL + SQL cleaning/transform layer
 - [ ] EDA notebook
 - [ ] Predictive model (charges regression)
 - [ ] Risk tier classification
 - [ ] Power BI dashboard
 - [ ] Findings report
+
+## Data quality findings (from `01_data_quality_checks.sql`)
+
+- 1 exact duplicate row (19yo male, BMI 30.59, northwest) — removed.
+- No nulls, no out-of-range values, no invalid categories otherwise.
+- Final analysis-ready row count: **1,337**.
+
+## Run it yourself
+
+```bash
+pip install -r requirements.txt
+python src/etl_load.py
+python -c "import sqlite3; sqlite3.connect('data/processed/insurance_warehouse.db').executescript(open('sql/02_clean_and_transform.sql').read())"
+```
+
