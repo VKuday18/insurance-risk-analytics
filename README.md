@@ -45,11 +45,26 @@ dashboards/ → Power BI
 
 - [x] Repo scaffold + raw data sourced
 - [x] ETL + SQL cleaning/transform layer
-- [ ] EDA notebook
+- [x] EDA notebook — see `notebooks/01_eda.ipynb`, figures in `reports/`
 - [ ] Predictive model (charges regression)
 - [ ] Risk tier classification
 - [ ] Power BI dashboard
 - [ ] Findings report
+
+## Key EDA findings
+
+- Charges are right-skewed (skew 1.52 → -0.09 after log transform) — informs
+  model choice.
+- Smokers pay ~3.8x the mean / ~4.7x the median charges of non-smokers —
+  single strongest driver.
+- Smoking × obesity is a real interaction, not additive: obese smokers pay
+  ~2.1x what normal-BMI smokers pay.
+- `risk_tier` (built in SQL) cleanly separates charges: `high` tier averages
+  ~5.2x the `standard` tier.
+- Age correlates with charges (r=0.30) but the relationship is clearer within
+  each smoking band than across the whole population — supports using
+  interaction terms or a tree-based model over a plain linear one.
+
 
 ## Data quality findings (from `01_data_quality_checks.sql`)
 
