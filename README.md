@@ -38,7 +38,7 @@ data/processed/policyholders_clean.csv   → analysis-ready fact table
 notebooks/  → EDA
 src/        → model training
 models/     → saved models
-dashboards/ → Power BI
+dashboards/ → Tableau Public
 ```
 
 ## Status
